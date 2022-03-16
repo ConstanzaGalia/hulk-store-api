@@ -1,23 +1,21 @@
 const { ObjectId } = require("mongoose").Types;
 const Product = require("../models/ProductSchema");
+const {productService} = require("../utils/productService");
 
 const createProduct = async (req, res) => {
     try {
-        const product = new Product({
-            ...req.body,
-        });
-        await product.save();
-        res.status(200).json(product);
+        const product = await productService.save(req.body);
+        return res.status(200).json(product);
     } catch (error) {
         console.log(error.message);
-        res.status(500).json("There was an error creating the product");
+       return res.status(500).json("There was an error creating the product");
     }
 };
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find();
-        res.status(200).json(products);
+        const products = await productService.find();
+        return res.status(200).json(products);
     } catch (error) {
         console.error(error.message);
         res.status(500).json("There was an error get all products");
